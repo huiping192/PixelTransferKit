@@ -1,0 +1,21 @@
+# .github/workflows/swift.yml
+name: Swift
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Xcode
+      run: sudo xcode-select -switch /Applications/Xcode.app
+    - name: Build
+      run: swift build
+    - name: Test
+      run: swift test
+
