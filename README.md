@@ -28,7 +28,7 @@ dependencies: [
 
 Then, add PixelTransferKit to your target dependencies:
 
-```
+```swift
 targets: [
     .target(
         name: "YourTarget",
@@ -39,7 +39,7 @@ targets: [
 ## Usage
 
 
-```
+```swift
 import PixelTransferKit
 
 // Initialize the PixelTransferKit object
