@@ -21,7 +21,10 @@ let package = Package(
             name: "PixelTransferKit",
             dependencies: []),
         .testTarget(
-            name: "PixelTransferKitTests",
-            dependencies: ["PixelTransferKit"]),
+          name: "PixelTransferKitTests",
+          dependencies: ["PixelTransferKit"],
+          resources: [
+            .copy("Resources/test.jpeg")
+          ]),
     ]
 )

@@ -33,7 +33,7 @@ public enum PixelTransferError: Error, CustomStringConvertible {
 public actor PixelTransferKit {
   private var pixelTransferSession: VTPixelTransferSession?
   
-  public init?(realTime: Bool = true) throws {
+  public init(realTime: Bool = true) throws {
     var session: VTPixelTransferSession?
     let status = VTPixelTransferSessionCreate(allocator: kCFAllocatorDefault, pixelTransferSessionOut: &session)
     if status == noErr, let transferSession = session {
