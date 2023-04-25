@@ -1,5 +1,9 @@
 # PixelTransferKit
 
+[![CI](https://github.com/huiping192/PixelTransferKit/actions/workflows/swift.yml/badge.svg?branch=main)](https://github.com/huiping192/PixelTransferKit/actions/workflows/swift.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]([https://opensource.org/licenses/MIT](https://github.com/huiping192/LICENSE))
+[![Twitter](https://img.shields.io/twitter/follow/huiping192?style=social)](https://twitter.com/huiping192)
+
 PixelTransferKit is a Swift library that provides an easy-to-use interface for converting pixel formats using `VTPixelTransferSession`. The library supports both macOS and iOS platforms.
 
 ## Features
