@@ -2,7 +2,7 @@ import Foundation
 import VideoToolbox
 import CoreVideo
 
-enum PixelTransferError: Error, CustomStringConvertible {
+public enum PixelTransferError: Error, CustomStringConvertible {
   
   case sessionCreationFailed(OSStatus)
   case settingPropertiesFailed(OSStatus)
@@ -12,7 +12,7 @@ enum PixelTransferError: Error, CustomStringConvertible {
   case pixelBufferTransferFailed(OSStatus)
   
   
-  var description: String {
+  public var description: String {
     switch self {
     case .sessionCreationFailed(let statusCode):
       return "Error creating VTPixelTransferSession: \(statusCode)"
