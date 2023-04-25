@@ -52,7 +52,7 @@ let pixelTransferKit = try PixelTransferKit(realTime: true)
 // Convert a CVPixelBuffer to another pixel format
 let sourcePixelBuffer: CVPixelBuffer = ...
 let destinationPixelFormat: OSType = kCVPixelFormatType_32BGRA
-let convertedPixelBuffer = try pixelTransferKit.convertPixelBuffer(sourcePixelBuffer, to: destinationPixelFormat)
+let convertedPixelBuffer = try await pixelTransferKit.convertPixelBuffer(sourcePixelBuffer, to: destinationPixelFormat)
 
 // Use the converted pixel buffer
 ...
