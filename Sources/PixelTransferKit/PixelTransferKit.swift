@@ -37,6 +37,7 @@ public actor PixelTransferKit {
     var session: VTPixelTransferSession?
     let status = VTPixelTransferSessionCreate(allocator: kCFAllocatorDefault, pixelTransferSessionOut: &session)
     if status == noErr, let transferSession = session {
+      print("[PixelTransferKit] Successfully created VTPixelTransferSession")
       pixelTransferSession = transferSession
     } else {
       print("[PixelTransferKit] Error creating VTPixelTransferSession: \(status)")
@@ -48,7 +49,9 @@ public actor PixelTransferKit {
         kVTPixelTransferPropertyKey_RealTime: (realTime ? kCFBooleanTrue : kCFBooleanFalse) as Any
       ]
       let setPropertyStatus = VTSessionSetProperties(pixelTransferSession, propertyDictionary: properties)
-      if setPropertyStatus != noErr {
+      if setPropertyStatus == noErr {
+        print("[PixelTransferKit] Successfully set VTPixelTransferSession properties")
+      } else {
         print("[PixelTransferKit] Error setting VTPixelTransferSession properties: \(setPropertyStatus)")
         throw PixelTransferError.settingPropertiesFailed(setPropertyStatus)
       }
@@ -95,7 +98,9 @@ public actor PixelTransferKit {
     
     let transferStatus = VTPixelTransferSessionTransferImage(session, from: sourcePixelBuffer, to: outputPixelBuffer)
     
-    if transferStatus != noErr {
+    if transferStatus == noErr {
+      print("[PixelTransferKit] Successfully transferred pixel buffer")
+    } else {
       print("[PixelTransferKit] Error transferring pixel buffer: \(transferStatus)")
       throw PixelTransferError.pixelBufferTransferFailed(transferStatus)
     }
