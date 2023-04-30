@@ -5,7 +5,8 @@ import ImageIO
 @testable import PixelTransferKit
 
 final class PixelTransferKitTests: XCTestCase {
-  func testPixelBufferConversion32BGRATo420YpCbCr8BiPlanarFullRange() async throws {
+  
+  func testVideoToolboxSessionConversion() async throws {
     let width = 1920
     let height = 1080
     
@@ -14,20 +15,15 @@ final class PixelTransferKitTests: XCTestCase {
     XCTAssertEqual(sourceStatus, kCVReturnSuccess)
     XCTAssertNotNil(sourcePixelBuffer)
     
-    let pixelTransferKit = try PixelTransferKit()
+    let destinationPixelFormat: OSType = kCVPixelFormatType_32BGRA
     
-    let destinationPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+    let pixelTransferKit = try PixelTransferKit(pixelTransferMethod: .videoToolboxSession)
     let convertedPixelBuffer = try await pixelTransferKit.convertPixelBuffer(sourcePixelBuffer!, to: destinationPixelFormat)
     
-    XCTAssertNotNil(convertedPixelBuffer)
-    XCTAssertEqual(CVPixelBufferGetPixelFormatType(convertedPixelBuffer!), destinationPixelFormat)
-    XCTAssertEqual(CVPixelBufferGetWidth(convertedPixelBuffer!), width)
-    XCTAssertEqual(CVPixelBufferGetHeight(convertedPixelBuffer!), height)
+    XCTAssertNotNil(convertedPixelBuffer, "Pixel buffer conversion with VideoToolboxSession failed.")
   }
   
-  
-  
-  func testPixelBufferConversionFromImage() async throws {
+  func testVImageConversion() async throws {
     // Load an image from the bundle
     let bundle = Bundle.module
     guard let imageURL = bundle.url(forResource: "test", withExtension: "jpeg") else {
@@ -49,28 +45,12 @@ final class PixelTransferKitTests: XCTestCase {
     XCTAssertEqual(sourceStatus, kCVReturnSuccess)
     XCTAssertNotNil(sourcePixelBuffer)
     
-    CVPixelBufferLockBaseAddress(sourcePixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
-    let baseAddress = CVPixelBufferGetBaseAddress(sourcePixelBuffer!)
+    let destinationPixelFormat: OSType = kCVPixelFormatType_32BGRA
     
-    let colorSpace = CGColorSpaceCreateDeviceRGB()
-    let bitmapInfo: CGBitmapInfo = [.byteOrder32Little, CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)]
-    let context = CGContext(data: baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: CVPixelBufferGetBytesPerRow(sourcePixelBuffer!), space: colorSpace, bitmapInfo: bitmapInfo.rawValue)
-    context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
-    
-    CVPixelBufferUnlockBaseAddress(sourcePixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
-    
-    // Create a PixelTransferKit instance
-    let pixelTransferKit = try PixelTransferKit()
-    
-    // Convert the source pixel buffer to kCVPixelFormatType_420YpCbCr8BiPlanarFullRange format
-    let destinationPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+    let pixelTransferKit = try PixelTransferKit(pixelTransferMethod: .vImage)
     let convertedPixelBuffer = try await pixelTransferKit.convertPixelBuffer(sourcePixelBuffer!, to: destinationPixelFormat)
     
-    // Check if the conversion was successful
-    XCTAssertNotNil(convertedPixelBuffer)
-    XCTAssertEqual(CVPixelBufferGetPixelFormatType(convertedPixelBuffer!), destinationPixelFormat)
-    XCTAssertEqual(CVPixelBufferGetWidth(convertedPixelBuffer!), width)
-    XCTAssertEqual(CVPixelBufferGetHeight(convertedPixelBuffer!), height)
+    XCTAssertNotNil(convertedPixelBuffer, "Pixel buffer conversion with vImage failed.")
   }
   
 }

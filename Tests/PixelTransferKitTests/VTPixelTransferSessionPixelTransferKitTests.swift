@@ -4,7 +4,7 @@ import ImageIO
 
 @testable import PixelTransferKit
 
-final class PixelTransferKitVImageTests: XCTestCase {
+final class VTPixelTransferSessionPixelTransferKitTests: XCTestCase {
   func testPixelBufferConversion32BGRATo420YpCbCr8BiPlanarFullRange() async throws {
     let width = 1920
     let height = 1080
@@ -14,7 +14,7 @@ final class PixelTransferKitVImageTests: XCTestCase {
     XCTAssertEqual(sourceStatus, kCVReturnSuccess)
     XCTAssertNotNil(sourcePixelBuffer)
     
-    let pixelTransferKit = PixelTransferKitVImage()
+    let pixelTransferKit = try VTPixelTransferSessionPixelTransferKit()
     
     let destinationPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     let convertedPixelBuffer = try pixelTransferKit.convertPixelBuffer(sourcePixelBuffer!, to: destinationPixelFormat)
@@ -60,7 +60,7 @@ final class PixelTransferKitVImageTests: XCTestCase {
     CVPixelBufferUnlockBaseAddress(sourcePixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
     
     // Create a PixelTransferKit instance
-    let pixelTransferKit = PixelTransferKitVImage()
+    let pixelTransferKit = try VTPixelTransferSessionPixelTransferKit()
     
     // Convert the source pixel buffer to kCVPixelFormatType_420YpCbCr8BiPlanarFullRange format
     let destinationPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange

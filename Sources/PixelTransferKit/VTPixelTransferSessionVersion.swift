@@ -2,7 +2,7 @@ import Foundation
 import VideoToolbox
 import CoreVideo
 
-public actor VTPixelTransferSessionPixelTransferKit {
+public class VTPixelTransferSessionPixelTransferKit: PixelTransfable {
   private var pixelTransferSession: VTPixelTransferSession?
   
   public init(realTime: Bool = true) throws {
@@ -36,7 +36,7 @@ public actor VTPixelTransferSessionPixelTransferKit {
     }
   }
   
-  public func convertPixelBuffer(_ sourcePixelBuffer: CVPixelBuffer, to destinationPixelFormat: OSType) throws -> CVPixelBuffer? {
+  public func convertPixelBuffer(_ sourcePixelBuffer: CVPixelBuffer, to destinationPixelFormat: OSType) throws -> CVPixelBuffer {
     guard let session = pixelTransferSession else {
       print("[PixelTransferKit] VTPixelTransferSession is not available")
       throw PixelTransferError.sessionNotAvailable
