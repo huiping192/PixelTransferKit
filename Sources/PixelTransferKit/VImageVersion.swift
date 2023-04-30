@@ -1,7 +1,6 @@
 import Foundation
 import Accelerate.vImage
 import CoreVideo
-
 public actor PixelTransferKitVImage {
   
   public init() {
@@ -9,7 +8,7 @@ public actor PixelTransferKitVImage {
   
   private var converter: vImageConverter?
   
-  func createConverter(cvImageFormat: vImageCVImageFormat) -> vImageConverter? {
+  func createConverter(cvImageFormat: vImageCVImageFormat) throws -> vImageConverter {
     var cgImageFormat = vImage_CGImageFormat(
       bitsPerComponent: 8,
       bitsPerPixel: 32,
@@ -29,16 +28,14 @@ public actor PixelTransferKitVImage {
       &cgImageFormat,
       nil,
       vImage_Flags(kvImagePrintDiagnosticsToConsole),
-      &error),
-          error == kvImageNoError else {
-      print("vImageConverter_CreateForCVToCGImageFormat error:", error)
-      return nil
+      &error) else {
+      throw PixelTransferError.sessionCreationFailed(OSStatus(error))
     }
     
     return unmanagedConverter.takeRetainedValue()
   }
   
-  func convertPixelBuffer(_ pixelBuffer: CVPixelBuffer, toPixelFormatType: OSType) -> CVPixelBuffer? {
+  func convertPixelBuffer(_ pixelBuffer: CVPixelBuffer, toPixelFormatType: OSType) throws -> CVPixelBuffer {
     // Get the source buffer's attributes
     let width = CVPixelBufferGetWidth(pixelBuffer)
     let height = CVPixelBufferGetHeight(pixelBuffer)
@@ -46,25 +43,29 @@ public actor PixelTransferKitVImage {
     // Create a destination pixel buffer with the desired pixel format
     var outputPixelBuffer: CVPixelBuffer?
     let status = CVPixelBufferCreate(kCFAllocatorDefault, width, height, toPixelFormatType, nil, &outputPixelBuffer)
-    guard status == kCVReturnSuccess, let outputPixelBuffer = outputPixelBuffer else { return nil }
+    guard status == kCVReturnSuccess, let outputPixelBuffer = outputPixelBuffer else {
+      throw PixelTransferError.destinationPixelBufferCreationFailed(status)
+    }
     
     // Create vImage buffers from source and destination pixel buffers
-    var sourceBuffer = getImageBuffer(from: pixelBuffer)
-    var destinationBuffer = getImageBuffer(from: outputPixelBuffer)
+    var sourceBuffer = try getImageBuffer(from: pixelBuffer)
+    var destinationBuffer = try getImageBuffer(from: outputPixelBuffer)
     
     if converter == nil {
       let cvImageFormat = vImageCVImageFormat_CreateWithCVPixelBuffer(pixelBuffer).takeRetainedValue()
-      self.converter = createConverter(cvImageFormat: cvImageFormat)
+      converter = try createConverter(cvImageFormat: cvImageFormat)
     }
     
     // Perform the pixel format conversion
-    let error = vImageConvert_AnyToAny(converter!, &sourceBuffer!, &destinationBuffer!, nil, vImage_Flags(kvImageNoFlags))
-    guard error == kvImageNoError else { return nil }
+    let error = vImageConvert_AnyToAny(converter!, &sourceBuffer, &destinationBuffer, nil, vImage_Flags(kvImageNoFlags))
+    guard error == kvImageNoError else {
+      throw PixelTransferError.pixelBufferTransferFailed(OSStatus(error))
+    }
     
     return outputPixelBuffer
   }
   
-  func getImageBuffer(from pixelBuffer: CVPixelBuffer) -> vImage_Buffer? {
+  func getImageBuffer(from pixelBuffer: CVPixelBuffer) throws -> vImage_Buffer {
     var buffer = vImage_Buffer()
     let bitmapInfo = CGBitmapInfo(rawValue: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.first.rawValue)
     let pixelFormat = CVPixelBufferGetPixelFormatType(pixelBuffer)
@@ -87,9 +88,11 @@ public actor PixelTransferKitVImage {
                                                cvFormat,
                                                nil,
                                                vImage_Flags(0))
-    guard error == kvImageNoError else { return nil }
+    guard error == kvImageNoError else {
+      throw PixelTransferError.destinationPixelBufferCreationFailed(OSStatus(error))
+    }
     
     return buffer
   }
-  
 }
+

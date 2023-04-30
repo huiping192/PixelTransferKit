@@ -14,15 +14,15 @@ final class PixelTransferKitVImageTests: XCTestCase {
     XCTAssertEqual(sourceStatus, kCVReturnSuccess)
     XCTAssertNotNil(sourcePixelBuffer)
     
-    let pixelTransferKit = try PixelTransferKitVImage()
+    let pixelTransferKit = PixelTransferKitVImage()
     
     let destinationPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
     let convertedPixelBuffer = try await pixelTransferKit.convertPixelBuffer(sourcePixelBuffer!, toPixelFormatType: destinationPixelFormat)
     
     XCTAssertNotNil(convertedPixelBuffer)
-    XCTAssertEqual(CVPixelBufferGetPixelFormatType(convertedPixelBuffer!), destinationPixelFormat)
-    XCTAssertEqual(CVPixelBufferGetWidth(convertedPixelBuffer!), width)
-    XCTAssertEqual(CVPixelBufferGetHeight(convertedPixelBuffer!), height)
+    XCTAssertEqual(CVPixelBufferGetPixelFormatType(convertedPixelBuffer), destinationPixelFormat)
+    XCTAssertEqual(CVPixelBufferGetWidth(convertedPixelBuffer), width)
+    XCTAssertEqual(CVPixelBufferGetHeight(convertedPixelBuffer), height)
   }
   
   
@@ -60,7 +60,7 @@ final class PixelTransferKitVImageTests: XCTestCase {
     CVPixelBufferUnlockBaseAddress(sourcePixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
     
     // Create a PixelTransferKit instance
-    let pixelTransferKit = try PixelTransferKitVImage()
+    let pixelTransferKit = PixelTransferKitVImage()
     
     // Convert the source pixel buffer to kCVPixelFormatType_420YpCbCr8BiPlanarFullRange format
     let destinationPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
@@ -68,9 +68,9 @@ final class PixelTransferKitVImageTests: XCTestCase {
     
     // Check if the conversion was successful
     XCTAssertNotNil(convertedPixelBuffer)
-    XCTAssertEqual(CVPixelBufferGetPixelFormatType(convertedPixelBuffer!), destinationPixelFormat)
-    XCTAssertEqual(CVPixelBufferGetWidth(convertedPixelBuffer!), width)
-    XCTAssertEqual(CVPixelBufferGetHeight(convertedPixelBuffer!), height)
+    XCTAssertEqual(CVPixelBufferGetPixelFormatType(convertedPixelBuffer), destinationPixelFormat)
+    XCTAssertEqual(CVPixelBufferGetWidth(convertedPixelBuffer), width)
+    XCTAssertEqual(CVPixelBufferGetHeight(convertedPixelBuffer), height)
   }
   
 }
