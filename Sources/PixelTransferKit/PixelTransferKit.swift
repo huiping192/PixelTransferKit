@@ -46,7 +46,7 @@ public actor PixelTransferKit {
   init(pixelTransferMethod: PixelTransferMethod = .videoToolboxSession) throws {
     switch pixelTransferMethod {
     case .videoToolboxSession:
-      self.pixelTransfable = try VTPixelTransferSessionPixelTransferKit()
+      self.pixelTransfable = try PixelTransferKitVideoToolBox()
     case .vImage:
       self.pixelTransfable = PixelTransferKitVImage()
     }

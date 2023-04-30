@@ -2,7 +2,7 @@ import Foundation
 import VideoToolbox
 import CoreVideo
 
-public class VTPixelTransferSessionPixelTransferKit: PixelTransfable {
+public class PixelTransferKitVideoToolBox: PixelTransfable {
   private var pixelTransferSession: VTPixelTransferSession?
   
   public init(realTime: Bool = true) throws {
