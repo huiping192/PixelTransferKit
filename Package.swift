@@ -15,6 +15,7 @@ let package = Package(
             targets: ["PixelTransferKit"]),
     ],
     dependencies: [
+      .package(url: "https://github.com/huiping192/BlueDress", branch: "feature/bundle-crash")
     ],
     targets: [
         .target(
@@ -22,7 +23,10 @@ let package = Package(
             dependencies: []),
         .testTarget(
           name: "PixelTransferKitTests",
-          dependencies: ["PixelTransferKit"],
+          dependencies: [
+            "PixelTransferKit",
+            .product(name: "BlueDress", package: "BlueDress")
+          ],
           resources: [
             .copy("Resources/test.jpeg")
           ]),

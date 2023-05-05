@@ -1,17 +1,23 @@
 import Foundation
 import CoreVideo
-
+import CoreImage
 
 func createImage(size: CGSize, format: OSType) -> CVPixelBuffer? {
   let width = 1920
   let height = 1080
   
   var sourcePixelBuffer: CVPixelBuffer?
-  CVPixelBufferCreate(kCFAllocatorDefault, width, height, format, nil, &sourcePixelBuffer)
+  let attributes: [CFString: Any] = [
+          kCVPixelBufferWidthKey: width,
+          kCVPixelBufferHeightKey: height,
+          kCVPixelBufferPixelFormatTypeKey: format,
+          kCVPixelBufferMetalCompatibilityKey: kCFBooleanTrue
+      ]
+  CVPixelBufferCreate(kCFAllocatorDefault, width, height, format, attributes as CFDictionary, &sourcePixelBuffer)
   return sourcePixelBuffer
 }
 
-func loadTestImage() -> CVPixelBuffer?  {
+func loadTestImage(format: OSType) -> CVPixelBuffer?  {
   let bundle = Bundle.module
   guard let imageURL = bundle.url(forResource: "test", withExtension: "jpeg") else {
     return nil
@@ -26,7 +32,13 @@ func loadTestImage() -> CVPixelBuffer?  {
   let width = cgImage.width
   let height = cgImage.height
   var sourcePixelBuffer: CVPixelBuffer?
-  let sourceStatus = CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, nil, &sourcePixelBuffer)
+  let attributes: [CFString: Any] = [
+          kCVPixelBufferWidthKey: width,
+          kCVPixelBufferHeightKey: height,
+          kCVPixelBufferPixelFormatTypeKey: format,
+          kCVPixelBufferMetalCompatibilityKey: kCFBooleanTrue
+      ]
+  let sourceStatus = CVPixelBufferCreate(kCFAllocatorDefault, width, height, format, attributes as CFDictionary, &sourcePixelBuffer)
   if sourceStatus != noErr || sourcePixelBuffer == nil {
     return nil
   }

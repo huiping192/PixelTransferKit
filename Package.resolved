@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "bluedress",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/huiping192/BlueDress",
+      "state" : {
+        "branch" : "feature/bundle-crash",
+        "revision" : "a6725d83dd6a00e4cef8441499a9fe08ab01ef2f"
+      }
+    }
+  ],
+  "version" : 2
+}
