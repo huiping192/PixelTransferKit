@@ -20,20 +20,21 @@ final class PixelTransferPerformanceTests: XCTestCase {
     }
   }
   
-  func testBlueDressPerformance() async throws  {
-    let width = 1920
-    let height = 1080
-    let sourcePixelBuffer: CVPixelBuffer? = createImage(size: CGSize(width: width, height: height), format: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
-    
-    let blueDress = BlueDress()
-    measure {
-      for _ in 0 ..< testCount {
-        do {
-          let _ = try! blueDress.convert(pixelBuffer: sourcePixelBuffer!)
-        }
-      }
-    }
-  }
+    // github action doest support metal, will faile
+//  func testBlueDressPerformance() async throws  {
+//    let width = 1920
+//    let height = 1080
+//    let sourcePixelBuffer: CVPixelBuffer? = createImage(size: CGSize(width: width, height: height), format: kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
+//
+//    let blueDress = BlueDress()
+//    measure {
+//      for _ in 0 ..< testCount {
+//        do {
+//          let _ = try! blueDress.convert(pixelBuffer: sourcePixelBuffer!)
+//        }
+//      }
+//    }
+//  }
   
   func testPixelTransferKitPerformance() async throws {
     let width = 1920
