@@ -7,13 +7,14 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app
+  
 jobs:
   build:
-    runs-on: macOS-latest
+    runs-on: self-hosted
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Xcode
-      run: sudo xcode-select -switch /Applications/Xcode.app
     - name: Build
       run: swift build
     - name: Test
